@@ -1,0 +1,57 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body {
+    height: 100vh;
+    background: url("images/candy-crush_banner1.jpg") no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+#board {
+    background-color: lightblue;
+    border: 5px solid gray;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.columnImg {
+    width: 50px;
+    height: 50px;
+}
+
+.columnElement{
+    display: flex;
+    flex-direction: column;
+}
+
+.columnElement:nth-child(0){
+    display: none;
+}
+/* 
+body {
+    background: url("./background.jpg") no-repeat center center fixed;
+    background-size: cover;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    text-align: center;
+}
+
+#board {
+    width: 450px;
+    height: 450px;
+    background-color: lightblue;
+    border: 5px solid slategray;
+    border-radius: 10px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+ */
