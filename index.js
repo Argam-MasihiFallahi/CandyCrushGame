@@ -62,8 +62,8 @@ function dragEnd() {
 
     let horizontalCandies = [];
     let verticalCandies = [];
-    if(horizontalCandies.length > 2) return ;
-    else if(verticalCandies.length > 2) return ;
+    // if(horizontalCandies.length > 2) return ;
+    // else if(verticalCandies.length > 2) return ;
 
     let currentCoords = currentCandy.dataset;
     let preventCoords = preventCandy.dataset;
@@ -76,14 +76,11 @@ function dragEnd() {
     let j1 = preventCoords.row;
     while (j1 >= 0) {
         if (j1 > 0 && board[i1][j1 - 1].type === preventCoords.type) {
-            // verticalCandies.push(board[i1][j1 - 1]);
-
             topCount += 1;
             j1 -= 1;
         } else break;
     }
 
-    // verticalCandies.push({ ...preventCoords});
 
     // bottom candies check
     let i = +preventCoords.column;
@@ -93,7 +90,6 @@ function dragEnd() {
             j < board[i].length - 1 &&
             board[i][j + 1].type === preventCoords.type
         ) {
-            // verticalCandies.push(board[i][j + 1]);
             bottomCount++;
             j++;
         } else break;
@@ -143,12 +139,10 @@ function dragEnd() {
     }
 
     for (let i = +preventCoords.column - leftCount;i <= +preventCoords.column + rightCount;i++) {
-        // console.log(+preventCoords.column - leftCount);
         for (let j = +preventCoords.row - topCount;j <= +preventCoords.row + bottomCount;j++) {
             if (verticalCandies.length > 2 && i === +preventCoords.column && j === +preventCoords.row - topCount) {
                 let x = board[i].splice(j, verticalCandies.length);
             }
-            // console.log(j === +preventCoords.row);
             if(j === +preventCoords.row && horizontalCandies.length > 2) {
                 console.log("kkkkkkk");
                 board[i].splice(j,1)
@@ -157,10 +151,7 @@ function dragEnd() {
         
     }
 
-
-   
     newCandyGenerate()
-    console.log("horizon" ,  horizontalCandies, "vertical" ,verticalCandies);
 }
 
 function createGameElements() {
@@ -207,42 +198,7 @@ function newCandyGenerate() {
             }
         }
     }
-    // while(board[i].length < columns){
-    //     let color_src = randomCandy();
-    //     for(let j = board[i].length ; j < rows ; j++) {
-    //         board[i].
-    //         continue
-    //     }
-    //     i++
-    // }
     createGameElements();
 }
 
 init();
-
-console.log(board);
-            columnArray.push({ type: color_src });
-
-
- // if(verticalCandies.length > 2) {
-    //     let x = board[+preventCoords.column].splice(+preventCoords.row - topCount , verticalCandies.length);
-    //     console.log(x);
-    // }
-    // if(horizontalCandies.length > 2) {
-    //     let x = board[]
-    // }
-
-// let currentCandyContainer = currentCandy;
-// let preventCandyContainer = preventCandy;
-// preventCandy = currentCandyContainer;
-// currentCandy = preventCandyContainer;
-// preventCandy.dataset.column = currentCandyContainer.dataset.column;
-// preventCandy.dataset.row = currentCandyContainer.dataset.row;
-// currentCandy.dataset.column = preventCandyContainer.dataset.column;
-
-
-// const fruits = ["Banana", "Orange", "Lemon", "Apple", "Mango"];
-// fruits.splice(1, 3);
-// console.log(fruits);
-
-
