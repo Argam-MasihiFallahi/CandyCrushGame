@@ -64,6 +64,7 @@ function dragEnd() {
     let verticalCandies = [];
     // if(horizontalCandies.length > 2) return ;
     // else if(verticalCandies.length > 2) return ;
+    
 
     let currentCoords = currentCandy.dataset;
     let preventCoords = preventCandy.dataset;
