@@ -7,6 +7,12 @@ let columns = 9;
 let currentCandy;
 let preventCandy;
 
+
+
+let horizontalCandies = [];
+let verticalCandies = [];
+let currentCoords = currentCandy.dataset;
+let preventCoords = preventCandy.dataset;
 const images = {
     Blue: "./images/Blue.png",
     Orange: "./images/Orange.png",
@@ -35,45 +41,8 @@ function createGameData() {
         board.push(columnArray);
     }
 }
-
-function dragStart() {
-    currentCandy = this;
-}
-
-function dragOver(e) {
-    e.preventDefault();
-}
-
-function dragEnter(e) {
-    e.preventDefault();
-}
-
-function dragLeave() {}
-
-function dragDrop() {
-    preventCandy = this;
-}
-
-function dragEnd() {
-    let topCount = 0;
-    let bottomCount = 0;
-    let leftCount = 0;
-    let rightCount = 0;
-
-    let horizontalCandies = [];
-    let verticalCandies = [];
-    // if(horizontalCandies.length > 2) return ;
-    // else if(verticalCandies.length > 2) return ;
-    
-
-    let currentCoords = currentCandy.dataset;
-    let preventCoords = preventCandy.dataset;
-    board[+currentCandy.dataset.column][+currentCandy.dataset.row].type = preventCoords.type;
-    board[+preventCandy.dataset.column][+preventCandy.dataset.row].type = currentCoords.type;
-    currentCandy.dataset.type = board[+currentCandy.dataset.column][+currentCandy.dataset.row].type;
-    preventCandy.dataset.type = board[+preventCandy.dataset.column][+preventCandy.dataset.row].type;
-    // top candies check
-    let i1 = preventCoords.column;
+function finedSameCandies() {
+ let i1 = preventCoords.column;
     let j1 = preventCoords.row;
     while (j1 >= 0) {
         if (j1 > 0 && board[i1][j1 - 1].type === preventCoords.type) {
@@ -122,7 +91,39 @@ function dragEnd() {
         } else {
             break;
         }
-    }
+    }   
+}
+
+function dragStart() {
+    currentCandy = this;
+}
+
+function dragOver(e) {
+    e.preventDefault();
+}
+
+function dragEnter(e) {
+    e.preventDefault();
+}
+
+function dragLeave() {}
+
+function dragDrop() {
+    preventCandy = this;
+}
+
+function dragEnd() {
+verticalCandies = [];
+verticalCandies = [];
+    
+    
+    
+    board[+currentCandy.dataset.column][+currentCandy.dataset.row].type = preventCoords.type;
+    board[+preventCandy.dataset.column][+preventCandy.dataset.row].type = currentCoords.type;
+    currentCandy.dataset.type = board[+currentCandy.dataset.column][+currentCandy.dataset.row].type;
+    preventCandy.dataset.type = board[+preventCandy.dataset.column][+preventCandy.dataset.row].type;
+    // top candies check
+    
 
     let j4 = preventCoords.row - topCount;
     let verticalCoord = +preventCoords.row + bottomCount;
@@ -152,7 +153,6 @@ function dragEnd() {
         
     }
 
-    newCandyGenerate()
 }
 
 function createGameElements() {
