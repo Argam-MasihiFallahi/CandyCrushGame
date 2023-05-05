@@ -220,20 +220,20 @@ function dragEnd() {
 
     let isMovement = left || right || up || down;
 
-    // if(isMovement) {
-    //     board[+currCandy.dataset.column][+currCandy.dataset.row].type = prevCoords.type;
-    //     board[+prevCandy.dataset.column][+prevCandy.dataset.row].type = currCoords.type;
-    //     currCandy.dataset.type = board[+currCandy.dataset.column][+currCandy.dataset.row].type;
-    //     prevCandy.dataset.type = board[+prevCandy.dataset.column][+prevCandy.dataset.row].type;
-    //     calculateSameCandies(prevCoords);
-    //     calculateSameCandies(currCoords);
-    // }
-    // else {
-    //     // board[+prevCandy.dataset.column][+prevCandy.dataset.row].type = prevCoords.type;
-    //     // board[+currCandy.dataset.column][+currCandy.dataset.row].type = currCoords.type;
-    //     // prevCandy.dataset.type = board[+currCandy.dataset.column][+currCandy.dataset.row].type;
-    //     // currCandy.dataset.type = board[+prevCandy.dataset.column][+prevCandy.dataset.row].type;
-    // }
+    if(isMovement) {
+        board[+currCandy.dataset.column][+currCandy.dataset.row].type = prevCoords.type;
+        board[+prevCandy.dataset.column][+prevCandy.dataset.row].type = currCoords.type;
+        currCandy.dataset.type = board[+currCandy.dataset.column][+currCandy.dataset.row].type;
+        prevCandy.dataset.type = board[+prevCandy.dataset.column][+prevCandy.dataset.row].type;
+        calculateSameCandies(prevCoords);
+        calculateSameCandies(currCoords);
+    }
+    else {
+        // board[+prevCandy.dataset.column][+prevCandy.dataset.row].type = prevCoords.type;
+        // board[+currCandy.dataset.column][+currCandy.dataset.row].type = currCoords.type;
+        // prevCandy.dataset.type = board[+currCandy.dataset.column][+currCandy.dataset.row].type;
+        // currCandy.dataset.type = board[+prevCandy.dataset.column][+prevCandy.dataset.row].type;
+    }
 
  
 
