@@ -17,6 +17,8 @@ const candies = ["Blue", "Orange", "Green", "Yellow", "Red", "Purple"]; //data i
 const board = []; //data array
 const boardElement = document.getElementById("board");
 
+
+
 const images = {
     Blue: "./images/Blue.png",
     Orange: "./images/Orange.png",
@@ -203,8 +205,8 @@ function dragDrop() {
 }
 
 function dragEnd() {
-    // currCoords = currCandy.dataset;
-    // prevCoords = prevCandy.dataset;
+    currCoords = currCandy.dataset;
+    prevCoords = prevCandy.dataset;
    
     let row = +currCandy.dataset.row;
     let column = +currCandy.dataset.column;
