@@ -1,18 +1,24 @@
-const candies = ["Blue", "Orange", "Green", "Yellow", "Red", "Purple"];
-const board = [];
-const boardElement = document.getElementById("board");
-
 let rows = 9;
 let columns = 9;
-let currentCandy;
-let preventCandy;
+let currCandy;
+let prevCandy;
 
-
-
+let topCount = 0;
+let bottomCount = 0;
+let leftCount = 0;
+let rightCount = 0;
 let horizontalCandies = [];
 let verticalCandies = [];
-let currentCoords = currentCandy.dataset;
-let preventCoords = preventCandy.dataset;
+
+let currCoords ;
+let prevCoords ;
+
+const candies = ["Blue", "Orange", "Green", "Yellow", "Red", "Purple"]; //data item types selected from this array
+const board = []; //data array
+const boardElement = document.getElementById("board");
+
+
+
 const images = {
     Blue: "./images/Blue.png",
     Orange: "./images/Orange.png",
@@ -26,11 +32,6 @@ function randomCandy() {
     return candies[Math.floor(Math.random() * candies.length)];
 }
 
-function init() {
-    createGameData();
-    createGameElements();
-}
-
 function createGameData() {
     for (let c = 0; c < columns; c++) {
         let columnArray = [];
@@ -41,126 +42,13 @@ function createGameData() {
         board.push(columnArray);
     }
 }
-function finedSameCandies() {
- let i1 = preventCoords.column;
-    let j1 = preventCoords.row;
-    while (j1 >= 0) {
-        if (j1 > 0 && board[i1][j1 - 1].type === preventCoords.type) {
-            topCount += 1;
-            j1 -= 1;
-        } else break;
-    }
-
-
-    // bottom candies check
-    let i = +preventCoords.column;
-    let j = +preventCoords.row;
-    while (j < board[i].length) {
-        if (
-            j < board[i].length - 1 &&
-            board[i][j + 1].type === preventCoords.type
-        ) {
-            bottomCount++;
-            j++;
-        } else break;
-    }
-
-    //right candies check
-    let i2 = +preventCoords.column;
-    let j2 = +preventCoords.row;
-    while (i2 < board.length) {
-        if (
-            i2 < board.length - 1 &&
-            board[i2 + 1][j2].type === preventCoords.type
-        ) {
-            rightCount++;
-            i2++;
-        } else {
-            break;
-        }
-    }
-
-    //left candies check
-    let i3 = preventCoords.column;
-    let j3 = preventCoords.row;
-    while (i3 >= 0) {
-        if (i3 > 0 && board[i3 - 1][j3].type === preventCoords.type) {
-            console.log("left");
-            leftCount++;
-            i3--;
-        } else {
-            break;
-        }
-    }   
-}
-
-function dragStart() {
-    currentCandy = this;
-}
-
-function dragOver(e) {
-    e.preventDefault();
-}
-
-function dragEnter(e) {
-    e.preventDefault();
-}
-
-function dragLeave() {}
-
-function dragDrop() {
-    preventCandy = this;
-}
-
-function dragEnd() {
-verticalCandies = [];
-verticalCandies = [];
-    
-    
-    
-    board[+currentCandy.dataset.column][+currentCandy.dataset.row].type = preventCoords.type;
-    board[+preventCandy.dataset.column][+preventCandy.dataset.row].type = currentCoords.type;
-    currentCandy.dataset.type = board[+currentCandy.dataset.column][+currentCandy.dataset.row].type;
-    preventCandy.dataset.type = board[+preventCandy.dataset.column][+preventCandy.dataset.row].type;
-    // top candies check
-    
-
-    let j4 = preventCoords.row - topCount;
-    let verticalCoord = +preventCoords.row + bottomCount;
-    while (j4 <= verticalCoord) {
-        verticalCandies.push(board[i][j4]);
-        j4++;
-
-    }
-
-    let i4 = preventCoords.column - leftCount;
-    let horizontalCoord = +preventCoords.column + rightCount;
-    while(i4 <= horizontalCoord) {
-        horizontalCandies.push(board[i4][j2])
-        i4++
-    }
-
-    for (let i = +preventCoords.column - leftCount;i <= +preventCoords.column + rightCount;i++) {
-        for (let j = +preventCoords.row - topCount;j <= +preventCoords.row + bottomCount;j++) {
-            if (verticalCandies.length > 2 && i === +preventCoords.column && j === +preventCoords.row - topCount) {
-                let x = board[i].splice(j, verticalCandies.length);
-            }
-            if(j === +preventCoords.row && horizontalCandies.length > 2) {
-                console.log("kkkkkkk");
-                board[i].splice(j,1)
-            }
-        }
-        
-    }
-
-}
 
 function createGameElements() {
     boardElement.innerHTML = "";
     for (let i = 0; i < board.length; i++) {
         let columnElement = document.createElement("div");
         columnElement.setAttribute("class", "columnElement");
-        boardElement.append(columnElement);
+
         for (let j = 0; j < board[i].length; j++) {
             let columnImgContainer = document.createElement("div");
             columnImgContainer.dataset.column = i;
@@ -187,19 +75,185 @@ function createGameElements() {
             //after drag process completed, we swap candies
             columnImgContainer.addEventListener("dragend", dragEnd);
         }
+        boardElement.append(columnElement);
     }
 }
 
+function calculateSameCandies(prevCoords) {
+    topCount = 0;
+    bottomCount = 0;
+    leftCount = 0;
+    rightCount = 0;
+
+    verticalCandies = [];
+    horizontalCandies = [];
+
+   
+    horizontalCandies.push({
+        column: +prevCoords.column,
+        row: +prevCoords.row,
+        ...board[prevCoords.column][prevCoords.row],
+    });
+
+    verticalCandies.push({
+        column: +prevCoords.column,
+        row: +prevCoords.row,
+        ...board[prevCoords.column][prevCoords.row],
+    });
+
+    // top candies check
+    let i1 = +prevCoords.column;
+    let j1 = +prevCoords.row - 1;
+    while (j1 >= 0) {
+        if (board[i1][j1].type === prevCoords.type) {
+            verticalCandies.unshift({ column: i1, row: j1, ...board[i1][j1] });
+            topCount++;
+            j1--;
+        } else break;
+    }
+
+    // bottom candies check
+    let i = +prevCoords.column;
+    let j = +prevCoords.row + 1;
+    while (j < board[i].length) {
+        if (board[i][j].type === prevCoords.type) {
+            verticalCandies.push({ column: i, row: j, ...board[i][j] });
+            bottomCount++;
+            j++;
+        } else break;
+    }
+
+    //left candies check
+    let i3 = +prevCoords.column - 1;
+    let j3 = +prevCoords.row;
+    while (i3 >= 0) {
+        if (board[i3][j3].type === prevCoords.type) {
+            horizontalCandies.unshift({
+                column: i3,
+                row: j3,
+                ...board[i3][j3],
+            });
+            leftCount++;
+            i3--;
+        } else {
+            break;
+        }
+    }
+    //right candies check
+    let i2 = +prevCoords.column + 1;
+    let j2 = +prevCoords.row;
+    while (i2 < board.length) {
+        if (board[i2][j2].type === prevCoords.type) {
+            horizontalCandies.push({ column: i2, row: j2, ...board[i2][j2] });
+            rightCount++;
+            i2++;
+        } else {
+            break;
+        }
+    }
+
+    candyCrush();
+    
+}
+
+function candyCrush() {
+    for ( let i = horizontalCandies[0].column; i <= horizontalCandies[horizontalCandies.length - 1].column; i++ ) {
+        for (let j = verticalCandies[0].row;j <= verticalCandies[verticalCandies.length - 1].row;j++) {
+            if ( verticalCandies.length > 2 && i === verticalCandies[0].column && j === verticalCandies[0].row ) {
+                board[i].splice(j, verticalCandies.length);
+            }
+            if (j === horizontalCandies[0].row && horizontalCandies.length > 2) {
+                board[i].splice(j, 1);
+            }
+        }
+    }
+    newCandyGenerate()
+}
 function newCandyGenerate() {
-    for(let i = 0 ; i < columns ; i++){
-        for(let j = 0 ; j < rows ; j++){
+    for (let i = 0; i < columns; i++) {
+        for (let j = 0; j < rows; j++) {
             let color_src = randomCandy();
-            if(board[i].length < columns){
-                board[i].unshift({type : color_src})
+            if (board[i].length < columns) {
+                board[i].unshift({ type: color_src });
             }
         }
     }
     createGameElements();
 }
 
+function init() {
+    createGameData();
+    createGameElements();
+}
+
+function dragStart() {
+    currCandy = this;
+}
+
+function dragOver(e) {
+    e.preventDefault();
+}
+
+function dragEnter(e) {
+    e.preventDefault();
+}
+
+function dragLeave() {}
+
+function dragDrop() {
+    prevCandy = this;
+}
+
+function dragEnd() {
+    currCoords = currCandy.dataset;
+    prevCoords = prevCandy.dataset;
+   
+    let row = +currCandy.dataset.row;
+    let column = +currCandy.dataset.column;
+    let row2 = +prevCandy.dataset.row;
+    let column2 = +prevCandy.dataset.column;
+
+    let left = column2 == column - 1 && row == row2;
+    let right = column2 == column + 1 && row == row2;
+    let up = row2 == row - 1 && column2 == column;
+    let down = row2 == row + 1 && column2 == column;
+
+    let isMovement = left || right || up || down;
+
+    if(isMovement) {
+        board[+currCandy.dataset.column][+currCandy.dataset.row].type = prevCoords.type;
+        board[+prevCandy.dataset.column][+prevCandy.dataset.row].type = currCoords.type;
+        currCandy.dataset.type = board[+currCandy.dataset.column][+currCandy.dataset.row].type;
+        prevCandy.dataset.type = board[+prevCandy.dataset.column][+prevCandy.dataset.row].type;
+        calculateSameCandies(prevCoords);
+        calculateSameCandies(currCoords);
+    }
+    else {
+        // board[+prevCandy.dataset.column][+prevCandy.dataset.row].type = prevCoords.type;
+        // board[+currCandy.dataset.column][+currCandy.dataset.row].type = currCoords.type;
+        // prevCandy.dataset.type = board[+currCandy.dataset.column][+currCandy.dataset.row].type;
+        // currCandy.dataset.type = board[+prevCandy.dataset.column][+prevCandy.dataset.row].type;
+    }
+
+ 
+
+
+
+    console.log(board);
+}
+
 init();
+
+// let j4 = prevCoords.row - topCount;
+// let verticalCoord = +prevCoords.row + bottomCount;
+// while (j4 <= verticalCoord) {
+//     verticalCandies.push(board[i][j4]);
+//     j4++;
+// }
+
+// let i4 = prevCoords.column - leftCount;
+// let horizontalCoord = +prevCoords.column + rightCount;
+// while (i4 <= horizontalCoord) {
+//     horizontalCandies.push(board[i4][j2]);
+//     i4++;
+// }
