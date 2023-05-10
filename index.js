@@ -7,16 +7,11 @@ let prevCandy;
 let currCoords;
 let prevCoords;
 
-let topCount = 0;
-let bottomCount = 0;
-let leftCount = 0;
-let rightCount = 0;
-
 let horizontalCandies = [];
 let verticalCandies = [];
 
-const candies = ["Blue", "Orange", "Green", "Yellow", "Red", "Purple"]; //data item types selected from this array
-const board = []; //data array
+const candies = ["Blue", "Orange", "Green", "Yellow", "Red", "Purple"];
+const board = [];
 const boardElement = document.getElementById("board");
 
 const images = {
@@ -80,11 +75,6 @@ function createGameElements() {
 }
 
 function calculateSameCandies(prevCoords) {
-    topCount = 0;
-    bottomCount = 0;
-    leftCount = 0;
-    rightCount = 0;
-
     verticalCandies = [];
     horizontalCandies = [];
 
@@ -106,7 +96,6 @@ function calculateSameCandies(prevCoords) {
     while (j1 >= 0) {
         if (board[i1][j1].type === prevCoords.type) {
             verticalCandies.unshift({ column: i1, row: j1, ...board[i1][j1] });
-            topCount++;
             j1--;
         } else break;
     }
@@ -117,7 +106,6 @@ function calculateSameCandies(prevCoords) {
     while (j < board[i].length) {
         if (board[i][j].type === prevCoords.type) {
             verticalCandies.push({ column: i, row: j, ...board[i][j] });
-            bottomCount++;
             j++;
         } else break;
     }
@@ -132,7 +120,6 @@ function calculateSameCandies(prevCoords) {
                 row: j3,
                 ...board[i3][j3],
             });
-            leftCount++;
             i3--;
         } else {
             break;
@@ -144,42 +131,31 @@ function calculateSameCandies(prevCoords) {
     while (i2 < board.length) {
         if (board[i2][j2].type === prevCoords.type) {
             horizontalCandies.push({ column: i2, row: j2, ...board[i2][j2] });
-            rightCount++;
             i2++;
         } else {
             break;
         }
     }
-
     candyCrush();
 }
 
 function candyCrush() {
-    for (
-        let i = horizontalCandies[0].column;
-        i <= horizontalCandies[horizontalCandies.length - 1].column;
-        i++
-    ) {
-        for (
-            let j = verticalCandies[0].row;
-            j <= verticalCandies[verticalCandies.length - 1].row;
-            j++
-        ) {
-            if (
-                verticalCandies.length > 2 &&
-                i === verticalCandies[0].column &&
-                j === verticalCandies[0].row
-            ) {
-                board[i].splice(j, verticalCandies.length);
-            }
-            if (
-                j === horizontalCandies[0].row &&
-                horizontalCandies.length > 2
-            ) {
-                board[i].splice(j, 1);
-            }
+    for (let i = 0; i < horizontalCandies.length; i++) {
+        if (horizontalCandies.length > 2) {
+            board[horizontalCandies[i].column].splice(
+                [horizontalCandies[i].row],
+                1
+            );
         }
     }
+
+    if (verticalCandies.length > 2) {
+        board[verticalCandies[0].column].splice(
+            [verticalCandies[0].row],
+            verticalCandies.length
+        );
+    }
+    
     newCandyGenerate();
 }
 function newCandyGenerate() {
@@ -218,17 +194,8 @@ function dragDrop() {
 }
 
 function dragEnd() {
-    currCoords = currCandy.dataset;
-    prevCoords = prevCandy.dataset;
-    board[+currCandy.dataset.column][+currCandy.dataset.row].type =
-        prevCoords.type;
-    board[+prevCandy.dataset.column][+prevCandy.dataset.row].type =
-        currCoords.type;
-    currCandy.dataset.type =
-        board[+currCandy.dataset.column][+currCandy.dataset.row].type;
-    prevCandy.dataset.type =
-        board[+prevCandy.dataset.column][+prevCandy.dataset.row].type;
-
+    if (currCandy.dataset.type === prevCandy.dataset.type) return;
+    
     let row = +currCandy.dataset.row;
     let column = +currCandy.dataset.column;
     let row2 = +prevCandy.dataset.row;
@@ -240,19 +207,19 @@ function dragEnd() {
     let down = row2 == row + 1 && column2 == column;
 
     let isMovement = left || right || up || down;
-    // console.log(isMovement);
 
     if (isMovement) {
+        currCoords = currCandy.dataset;
+        prevCoords = prevCandy.dataset;
+        board[+currCandy.dataset.column][+currCandy.dataset.row].type = prevCoords.type;
+        board[+prevCandy.dataset.column][+prevCandy.dataset.row].type = currCoords.type;
+        currCandy.dataset.type = board[+currCandy.dataset.column][+currCandy.dataset.row].type;
+        prevCandy.dataset.type = board[+prevCandy.dataset.column][+prevCandy.dataset.row].type;
+
         calculateSameCandies(prevCandy.dataset);
         calculateSameCandies(currCandy.dataset);
-    } else {
-        // board[+prevCandy.dataset.column][+prevCandy.dataset.row].type = prevCoords.type;
-        // board[+currCandy.dataset.column][+currCandy.dataset.row].type = currCoords.type;
-        // prevCandy.dataset.type = board[+currCandy.dataset.column][+currCandy.dataset.row].type;
-        // currCandy.dataset.type = board[+prevCandy.dataset.column][+prevCandy.dataset.row].type;
-    }
-
-    console.log(board);
+    } 
 }
 
 init();
+
